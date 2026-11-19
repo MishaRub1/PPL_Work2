@@ -8,7 +8,7 @@ import {
     Binding, VarDecl, CExp, Exp, IfExp, LetExp, ProcExp, Program,
     parseL3Exp, DefineExp
 } from "./L3-ast";
-import { applyEnv, makeEmptyEnv, makeExtEnv, Env } from "./L3-env-env";
+import { applyEnv, makeEmptyEnv, makeExtEnv, makeRecEnv, Env } from "./L3-env-env";
 import { isClosure, makeClosureEnv, Closure, Value, ClassValue, makeClassValueEnv, isClassValue, makeObjectValueEnv, ObjectValue, isObjectValue, isSymbolSExp } from "./L3-value";
 import { applyPrimitive } from "./evalPrimitive";
 import { allT, first, rest, isEmpty, isNonEmptyList } from "../shared/list";
@@ -101,8 +101,9 @@ const evalCExps = (first: Exp, rest: Exp[], env: Env): Result<Value> =>
 // Compute the rhs of the define, extend the env with the new binding
 // then compute the rest of the exps in the new env.
 const evalDefineExps = (def: DefineExp, exps: Exp[], env: Env): Result<Value> =>
-    bind(applicativeEval(def.val, env), (rhs: Value) =>
-        evalSequence(exps, makeExtEnv([def.var.var], [rhs], env)));
+    isClassExp(def.val) ? evalSequence(exps, makeRecEnv([def.var.var], [def.val], env)) :
+        bind(applicativeEval(def.val, env), (rhs: Value) =>
+            evalSequence(exps, makeExtEnv([def.var.var], [rhs], env)));
 
 
 // Main program
