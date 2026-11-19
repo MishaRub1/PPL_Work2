@@ -1,7 +1,7 @@
-import { filter, indexOf, map, includes, zip, KeyValuePair } from "ramda";
-import { CExp, ProcExp, VarDecl, VarRef } from "./L3-ast";
-import { isAppExp, isBoolExp, isIfExp, isLitExp, isNumExp, isPrimOp, isProcExp, isStrExp, isVarRef } from "./L3-ast";
-import { makeAppExp, makeIfExp, makeProcExp, makeVarDecl, makeVarRef } from "./L3-ast";
+import { filter, indexOf, map, includes, zip, KeyValuePair, zipWith } from "ramda";
+import { CExp, ProcExp, VarDecl, VarRef, ClassExp, Binding } from "./L3-ast";
+import { isAppExp, isBoolExp, isIfExp, isLitExp, isNumExp, isPrimOp, isProcExp, isStrExp, isVarRef, isClassExp } from "./L3-ast";
+import { makeAppExp, makeIfExp, makeProcExp, makeVarDecl, makeVarRef, makeClassExp, makeBinding } from "./L3-ast";
 import { first, isNonEmptyList } from '../shared/list';
 
 // For applicative eval - the type of exps should be ValueExp[] | VarRef[];
@@ -31,11 +31,11 @@ export const substitute = (body: CExp[], vars: string[], exps: CExp[]): CExp[] =
         const pos = indexOf(e.var, vars);
         return ((pos > -1) ? exps[pos] : e);
     };
-    
+
     const subProcExp = (e: ProcExp): ProcExp => {
         const argNames = map((x) => x.var, e.args);
         const subst = zip(vars, exps);
-        const freeSubst = filter((ve) => 
+        const freeSubst = filter((ve) =>
             isNonEmptyList<String>(ve) && !includes(first(ve), argNames), subst);
         return makeProcExp(
             e.args,
@@ -46,19 +46,35 @@ export const substitute = (body: CExp[], vars: string[], exps: CExp[]): CExp[] =
             )
         );
     };
-    
-    const sub = (e: CExp): CExp => 
+
+    const subClassExp = (e: ClassExp): ClassExp => {
+        const fieldNames = map((x: VarDecl) => x.var, e.fields);
+        const subst = zip(vars, exps);
+        const freeSubst = filter((ve) =>
+            isNonEmptyList<String>(ve) && !includes(first(ve), fieldNames), subst);
+        const names = map((b: Binding) => b.var.var, e.methods);
+        const vals = map((b: Binding) => b.val, e.methods);
+        const newVals = substitute(
+            vals,
+            map((x: KeyValuePair<string, CExp>) => x[0], freeSubst),
+            map((x: KeyValuePair<string, CExp>) => x[1], freeSubst)
+        );
+        return makeClassExp(e.fields, zipWith(makeBinding, names, newVals));
+    };
+
+    const sub = (e: CExp): CExp =>
         isNumExp(e) ? e :
-        isBoolExp(e) ? e :
-        isPrimOp(e) ? e :
-        isLitExp(e) ? e :
-        isStrExp(e) ? e :
-        isVarRef(e) ? subVarRef(e) :
-        isIfExp(e) ? makeIfExp(sub(e.test), sub(e.then), sub(e.alt)) :
-        isProcExp(e) ? subProcExp(e) :
-        isAppExp(e) ? makeAppExp(sub(e.rator), map(sub, e.rands)) :
-        e;
-    
+            isBoolExp(e) ? e :
+                isPrimOp(e) ? e :
+                    isLitExp(e) ? e :
+                        isStrExp(e) ? e :
+                            isVarRef(e) ? subVarRef(e) :
+                                isIfExp(e) ? makeIfExp(sub(e.test), sub(e.then), sub(e.alt)) :
+                                    isProcExp(e) ? subProcExp(e) :
+                                        isAppExp(e) ? makeAppExp(sub(e.rator), map(sub, e.rands)) :
+                                            isClassExp(e) ? subClassExp(e) :
+                                                e;
+
     return map(sub, body);
 };
 /*
@@ -80,10 +96,10 @@ export const renameExps = (exps: CExp[]): CExp[] => {
     const varGen = makeVarGen();
     const replace = (e: CExp): CExp =>
         isIfExp(e) ? makeIfExp(replace(e.test), replace(e.then), replace(e.alt)) :
-        isAppExp(e) ? makeAppExp(replace(e.rator), map(replace, e.rands)) :
-        isProcExp(e) ? replaceProc(e) :
-        e;
-    
+            isAppExp(e) ? makeAppExp(replace(e.rator), map(replace, e.rands)) :
+                isProcExp(e) ? replaceProc(e) :
+                    e;
+
     // Rename the params and substitute old params with renamed ones.
     //  First recursively rename all ProcExps inside the body.
     const replaceProc = (e: ProcExp): ProcExp => {
@@ -92,6 +108,6 @@ export const renameExps = (exps: CExp[]): CExp[] => {
         const newBody = map(replace, e.body);
         return makeProcExp(map(makeVarDecl, newArgs), substitute(newBody, oldArgs, map(makeVarRef, newArgs)));
     };
-    
+
     return map(replace, exps);
 };
