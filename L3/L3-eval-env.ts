@@ -1,7 +1,7 @@
 // L3-eval.ts
 // Evaluator with Environments model
 
-import { map } from "ramda";
+import { map, filter } from "ramda";
 import {
     isBoolExp, isCExp, isLitExp, isNumExp, isPrimOp, isStrExp, isVarRef,
     isAppExp, isDefineExp, isIfExp, isLetExp, isProcExp, isClassExp, ClassExp,
@@ -9,7 +9,7 @@ import {
     parseL3Exp, DefineExp
 } from "./L3-ast";
 import { applyEnv, makeEmptyEnv, makeExtEnv, Env } from "./L3-env-env";
-import { isClosure, makeClosureEnv, Closure, Value, ClassValue, makeClassValueEnv, isClassValue, makeObjectValueEnv } from "./L3-value";
+import { isClosure, makeClosureEnv, Closure, Value, ClassValue, makeClassValueEnv, isClassValue, makeObjectValueEnv, ObjectValue, isObjectValue, isSymbolSExp } from "./L3-value";
 import { applyPrimitive } from "./evalPrimitive";
 import { allT, first, rest, isEmpty, isNonEmptyList } from "../shared/list";
 import { Result, makeOk, makeFailure, bind, mapResult } from "../shared/result";
@@ -58,7 +58,8 @@ const applyProcedure = (proc: Value, args: Value[]): Result<Value> =>
     isPrimOp(proc) ? applyPrimitive(proc, args) :
         isClosure(proc) ? applyClosure(proc, args) :
             isClassValue(proc) ? applyClass(proc, args) :
-                makeFailure(`Bad procedure ${format(proc)}`);
+                isObjectValue(proc) ? applyObject(proc, args) :
+                    makeFailure(`Bad procedure ${format(proc)}`);
 
 const applyClosure = (proc: Closure, args: Value[]): Result<Value> => {
     const vars = map((v: VarDecl) => v.var, proc.params);
@@ -68,6 +69,21 @@ const applyClosure = (proc: Closure, args: Value[]): Result<Value> => {
 const applyClass = (cls: ClassValue, args: Value[]): Result<Value> => {
     const vars = map((v: VarDecl) => v.var, cls.fields);
     return makeOk(makeObjectValueEnv(cls.methods, makeExtEnv(vars, args, cls.env)));
+}
+
+const applyObject = (obj: ObjectValue, args: Value[]): Result<Value> => {
+    if (!isNonEmptyList<Value>(args)) {
+        return makeFailure("Object application requires a method name");
+    }
+    const msg = first(args);
+    if (!isSymbolSExp(msg)) {
+        return makeFailure(`Method name must be a symbol: ${format(msg)}`);
+    }
+    const found = filter((b: Binding) => b.var.var === msg.val, obj.methods);
+    return isNonEmptyList<Binding>(found) ?
+        bind(applicativeEval(first(found).val, obj.env), (method: Value) =>
+            applyProcedure(method, rest(args))) :
+        makeFailure(`Unrecognized method: ${msg.val}`);
 }
 
 // Evaluate a sequence of expressions (in a program)
