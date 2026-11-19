@@ -9,7 +9,7 @@ import {
     parseL3Exp, DefineExp
 } from "./L3-ast";
 import { applyEnv, makeEmptyEnv, makeExtEnv, Env } from "./L3-env-env";
-import { isClosure, makeClosureEnv, Closure, Value, ClassValue, makeClassValueEnv } from "./L3-value";
+import { isClosure, makeClosureEnv, Closure, Value, ClassValue, makeClassValueEnv, isClassValue, makeObjectValueEnv } from "./L3-value";
 import { applyPrimitive } from "./evalPrimitive";
 import { allT, first, rest, isEmpty, isNonEmptyList } from "../shared/list";
 import { Result, makeOk, makeFailure, bind, mapResult } from "../shared/result";
@@ -57,11 +57,17 @@ const evalClass = (exp: ClassExp, env: Env): Result<ClassValue> =>
 const applyProcedure = (proc: Value, args: Value[]): Result<Value> =>
     isPrimOp(proc) ? applyPrimitive(proc, args) :
         isClosure(proc) ? applyClosure(proc, args) :
-            makeFailure(`Bad procedure ${format(proc)}`);
+            isClassValue(proc) ? applyClass(proc, args) :
+                makeFailure(`Bad procedure ${format(proc)}`);
 
 const applyClosure = (proc: Closure, args: Value[]): Result<Value> => {
     const vars = map((v: VarDecl) => v.var, proc.params);
     return evalSequence(proc.body, makeExtEnv(vars, args, proc.env));
+}
+
+const applyClass = (cls: ClassValue, args: Value[]): Result<Value> => {
+    const vars = map((v: VarDecl) => v.var, cls.fields);
+    return makeOk(makeObjectValueEnv(cls.methods, makeExtEnv(vars, args, cls.env)));
 }
 
 // Evaluate a sequence of expressions (in a program)
