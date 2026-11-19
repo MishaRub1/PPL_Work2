@@ -98,7 +98,8 @@ export const renameExps = (exps: CExp[]): CExp[] => {
         isIfExp(e) ? makeIfExp(replace(e.test), replace(e.then), replace(e.alt)) :
             isAppExp(e) ? makeAppExp(replace(e.rator), map(replace, e.rands)) :
                 isProcExp(e) ? replaceProc(e) :
-                    e;
+                    isClassExp(e) ? replaceClass(e) :
+                        e;
 
     // Rename the params and substitute old params with renamed ones.
     //  First recursively rename all ProcExps inside the body.
@@ -107,6 +108,16 @@ export const renameExps = (exps: CExp[]): CExp[] => {
         const newArgs = map(varGen, oldArgs);
         const newBody = map(replace, e.body);
         return makeProcExp(map(makeVarDecl, newArgs), substitute(newBody, oldArgs, map(makeVarRef, newArgs)));
+    };
+
+    // Rename the fields and substitute old fields with renamed ones in the methods.
+    const replaceClass = (e: ClassExp): ClassExp => {
+        const oldFields = map((f: VarDecl): string => f.var, e.fields);
+        const newFields = map(varGen, oldFields);
+        const names = map((b: Binding) => b.var.var, e.methods);
+        const newVals = map((b: Binding) => replace(b.val), e.methods);
+        return makeClassExp(map(makeVarDecl, newFields),
+            zipWith(makeBinding, names, substitute(newVals, oldFields, map(makeVarRef, newFields))));
     };
 
     return map(replace, exps);

@@ -1,7 +1,9 @@
-import { ClassExp, ProcExp, Exp, Program, CExp, Binding, makeProcExp, makeVarDecl,
+import {
+    ClassExp, ProcExp, Exp, Program, CExp, Binding, makeProcExp, makeVarDecl,
     makeIfExp, makeAppExp, makePrimOp, makeVarRef, makeLitExp, isProcExp,
     isProgram, makeProgram, isDefineExp, makeDefineExp, isAtomicExp, isLitExp,
-    isIfExp, isAppExp, isLetExp, makeLetExp, makeBinding, isClassExp } from "./L3-ast";
+    isIfExp, isAppExp, isLetExp, makeLetExp, makeBinding, isClassExp
+} from "./L3-ast";
 import { makeSymbolSExp } from "./L3-value";
 import { first, rest, isNonEmptyList } from "../shared/list";
 import { Result, makeOk } from "../shared/result";
