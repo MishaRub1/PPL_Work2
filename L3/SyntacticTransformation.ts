@@ -10,7 +10,8 @@ import { Result, makeOk } from "../shared/result";
 import { map } from "ramda";
 
 const methodBody = (val: CExp): CExp =>
-    isProcExp(val) ? val.body[0] : val;
+    isProcExp(val) && val.body.length === 1 ? val.body[0] :
+        makeAppExp(val, []);
 
 const methodsToIf = (methods: Binding[]): CExp =>
     isNonEmptyList<Binding>(methods) ?
