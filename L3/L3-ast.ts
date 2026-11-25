@@ -263,7 +263,7 @@ const isBindingSexp = (b: Sexp): b is [Sexp, Sexp] =>
 
 // ClassExp -> (class (<var>+) (<binding>+))
 const parseClassExp = (fields: Sexp, bindings: Sexp): Result<ClassExp> => {
-    if (!isArray(fields) || isEmpty(fields) || !allT(isIdentifier, fields)) {
+    if (!isArray(fields) || isEmpty(fields) || !allT(isString, fields) || !allT(isIdentifier, fields)) {
         return makeFailure(`Invalid fields for ClassExp: ${format(fields)}`);
     }
     if (!isGoodBindings(bindings) || isEmpty(bindings) || !allT(isBindingSexp, bindings)) {
