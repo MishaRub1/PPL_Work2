@@ -104,7 +104,9 @@ const applyObject = (obj: ObjectValue, args: Value[], env: Env): Result<Value> =
     const found = filter((b: Binding) => b.var.var === msg.val, obj.methods);
     return isNonEmptyList<Binding>(found) ?
         bind(L3applicativeEval(first(found).val, env), (method: Value) =>
-            L3applyProcedure(method, rest(args), env)) :
+            isClosure(method) && method.params.length !== rest(args).length ?
+                makeFailure("Wrong number of parameters") :
+                L3applyProcedure(method, rest(args), env)) :
         makeFailure(`Unrecognized method: ${msg.val}`);
 }
 

@@ -82,7 +82,9 @@ const applyObject = (obj: ObjectValue, args: Value[]): Result<Value> => {
     const found = filter((b: Binding) => b.var.var === msg.val, obj.methods);
     return isNonEmptyList<Binding>(found) ?
         bind(applicativeEval(first(found).val, obj.env), (method: Value) =>
-            applyProcedure(method, rest(args))) :
+            isClosure(method) && method.params.length !== rest(args).length ?
+                makeFailure("Wrong number of parameters") :
+                applyProcedure(method, rest(args))) :
         makeFailure(`Unrecognized method: ${msg.val}`);
 }
 
