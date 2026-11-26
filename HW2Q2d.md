@@ -80,9 +80,9 @@ pi
 
 #### 3) דיאגרמת הסביבות במודל הסביבות:
 
-**Answer (handwritten):** see also `HW2Q2d.png`.
+**Answer (handwritten):** see also `images/HW2Q2d.png`.
 
-![Question 2.d handwritten environment diagram](HW2Q2d.png)
+![Question 2.d handwritten environment diagram](images/HW2Q2d.png)
 
 הגופים המלאים של הקלוז'רים שבדיאגרמה:
 

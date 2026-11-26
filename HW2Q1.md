@@ -4,9 +4,9 @@
 
 Let us define the L11 language as L1 excluding the special form `define`. Is there a program in L1 which cannot be transformed to an equivalent program in L11? Explain or give a contradictory example
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.1.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.1.png`.
 
-![Question 1.1 handwritten answer](HW2Q1.1.png)
+![Question 1.1 handwritten answer](images/HW2Q1.1.png)
 
 **Answer (typed):**
 
@@ -20,9 +20,9 @@ Let us define the L11 language as L1 excluding the special form `define`. Is the
 
 Let us define the L21 language as L2 excluding the special form `define`. Is there a program in L2 which cannot be transformed to an equivalent program in L21? Explain or give a contradictory example
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.2.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.2.png`.
 
-![Question 1.2 handwritten answer](HW2Q1.2.png)
+![Question 1.2 handwritten answer](images/HW2Q1.2.png)
 
 **Answer (typed):**
 
@@ -40,9 +40,9 @@ Let us define the L21 language as L2 excluding the special form `define`. Is the
 
 Let us define the L22 language as L2, where procedures (`lambda`) can only have one parameter and a body with one expression. Is there a program in L2 which cannot be transformed to an equivalent program in L22? Explain or give a contradictory example
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.3.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.3.png`.
 
-![Question 1.3 handwritten answer](HW2Q1.3.png)
+![Question 1.3 handwritten answer](images/HW2Q1.3.png)
 
 **Answer (typed):**
 
@@ -60,9 +60,9 @@ Let us define the L22 language as L2, where procedures (`lambda`) can only have 
 
 Let us define the L23 language as L2, where procedures (`lambda`) are first-order, _i.e._ cannot get functions as arguments. Is there a program in L2 which cannot be transformed to an equivalent program in L23? Explain or give a contradictory example
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.4.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.4.png`.
 
-![Question 1.4 handwritten answer](HW2Q1.4.png)
+![Question 1.4 handwritten answer](images/HW2Q1.4.png)
 
 **Answer (typed):**
 
@@ -78,9 +78,9 @@ Let us define the L23 language as L2, where procedures (`lambda`) are first-orde
 
 Why are special forms required in programming languages? Why can't we simply define them as primitive operators? Give an example
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.5.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.5.png`.
 
-![Question 1.5 handwritten answer](HW2Q1.5.png)
+![Question 1.5 handwritten answer](images/HW2Q1.5.png)
 
 **Answer (typed):**
 
@@ -100,9 +100,9 @@ Why are special forms required in programming languages? Why can't we simply def
 
 Is a function-body with multiple expressions required in a pure functional programming? In which type of languages is it useful? What about L3?
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.6.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.6.png`.
 
-![Question 1.6 handwritten answer](HW2Q1.6.png)
+![Question 1.6 handwritten answer](images/HW2Q1.6.png)
 
 **Answer (typed):**
 
@@ -116,9 +116,9 @@ Is a function-body with multiple expressions required in a pure functional progr
 
 What is _lexical address_? Give an example which demonstrates this concept
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.7.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.7.png`.
 
-![Question 1.7 handwritten answer](HW2Q1.7.png)
+![Question 1.7 handwritten answer](images/HW2Q1.7.png)
 
 **Answer (typed):**
 
@@ -142,9 +142,9 @@ What is _lexical address_? Give an example which demonstrates this concept
 
 In [practical session 5](https://bguppl.github.io/interpreters/practice_sessions/ps5.html), we deal with two representations of primitive operations: _PrimOp_ and _Closure_. List an advantage for each of the two methods.
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.8.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.8.png`.
 
-![Question 1.8 handwritten answer](HW2Q1.8.png)
+![Question 1.8 handwritten answer](images/HW2Q1.8.png)
 
 **Answer (typed):**
 
@@ -161,9 +161,9 @@ In [practical session 5](https://bguppl.github.io/interpreters/practice_sessions
 1. What are the reasons that would justify switching from applicative order to normal order evaluation? Give an example.
 2. What are the reasons that would justify switching from normal order to applicative order evaluation? Give an example.
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.9.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.9.png`.
 
-![Question 1.9 handwritten answer](HW2Q1.9.png)
+![Question 1.9 handwritten answer](images/HW2Q1.9.png)
 
 **Answer (typed):**
 
@@ -209,9 +209,9 @@ In [practical session 5](https://bguppl.github.io/interpreters/practice_sessions
 2. The valueToLitExp function is not needed in the normal evaluation strategy interpreter (L3-normal.ts). Why?
 3. The valueToLitExp function is not needed in the environment-model interpreter. Why?
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.10.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.10.png`.
 
-![Question 1.10 handwritten answer](HW2Q1.10.png)
+![Question 1.10 handwritten answer](images/HW2Q1.10.png)
 
 **Answer (typed):**
 
@@ -238,9 +238,9 @@ In [practical session 5](https://bguppl.github.io/interpreters/practice_sessions
 1. Why is renaming not required in the environment model?
 2. Is renaming required in the substitution model for a case where the term that is substituted is "closed", _i.e._, does not contain free variables? explain.
 
-**Answer (handwritten):** see also `HW2Q1.pdf` / `HW2Q1.11.png`.
+**Answer (handwritten):** see also `HW2Q1.pdf` / `images/HW2Q1.11.png`.
 
-![Question 1.11 handwritten answer](HW2Q1.11.png)
+![Question 1.11 handwritten answer](images/HW2Q1.11.png)
 
 **Answer (typed):**
 
